@@ -1,15 +1,16 @@
 from data import MENU
 from data import resources
 
-money = 0
+money_receive = 0
 
-
-def check_resource(resources, option):
+def check_resource(resources, option, money_receive):
     if option == 'espresso':
         if resources['water'] >= 50 and resources['coffee'] >= 18:
             resources['water'] -= 50
             resources['coffee'] -= 18
-            print('Here is your espresso ☕️. Enjoy!')
+            cost = MENU['espresso']['cost']
+            money_receive += payment(cost, money_receive)
+            print('Here is your espresso ☕. Enjoy!')
         elif resources['water'] < 50 and resources['coffee'] >= 18:
             print('Sorry. Not enough water')
         else:
@@ -19,6 +20,8 @@ def check_resource(resources, option):
             resources['water'] -= 200
             resources['milk'] -= 150
             resources['coffee'] -= 24
+            cost = MENU['latte']['cost']
+            money_receive += payment(cost, money_receive)
             print('Here is your latte ☕️. Enjoy!')
         elif resources['water'] < 200 and resources['milk'] >= 150 and resources['coffee'] >= 24:
             print('Sorry. Not enough water')
@@ -31,6 +34,8 @@ def check_resource(resources, option):
             resources['water'] -= 250
             resources['milk'] -= 100
             resources['coffee'] -= 24
+            cost = MENU['cappuccino']['cost']
+            money_receive += payment(cost, money_receive)
             print('Here is your cappuccino ☕️. Enjoy!')
         elif resources['water'] < 200 and resources['milk'] >= 150 and resources['coffee'] >= 24:
             print('Sorry. Not enough water')
@@ -40,9 +45,10 @@ def check_resource(resources, option):
             print('Sorry. Not enough milk')
         else:
             print('Sorry. Not enough milk and water')
+    return money_receive
 
 
-def payment(cost):
+def payment(cost, money_receive):
     quarter = 0.25
     dimes = 0.1
     nickles = 0.05
@@ -67,17 +73,10 @@ while machine_on:
     if option == 'off':
         machine_on = False
     elif option == 'report':
-        print(f"Water: {resources['water']}\nMilk: {resources['milk']}\nCoffee: {resources['coffee']}\nMoney: {money}")
+        print(f"Water: {resources['water']}\nMilk: {resources['milk']}\nCoffee: {resources['coffee']}\nMoney: {money_receive}")
     elif option == 'espresso':
-        check_resource(resources, option)
-        cost = MENU['espresso']['cost']
-        money += payment(cost)
+        money_receive = check_resource(resources, option, money_receive)
     elif option == 'latte':
-        check_resource(resources, option)
-        cost = MENU['latte']['cost']
-        money += payment(cost)
+        money_receive = check_resource(resources, option, money_receive)
     elif option == 'cappuccino':
-        check_resource(resources, option)
-        cost = MENU['cappuccino']['cost']
-        money += payment(cost)
-
+        money_receive = check_resource(resources, option, money_receive)
